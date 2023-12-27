@@ -1,32 +1,26 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import "./App.css";
 import AddNewNote from "./components/AddNewNote";
 import NoteList from "./components/NoteList";
+import NoteStatus from "./components/NoteStatus";
+import NoteHeader from "./components/NoteHeader";
+import { NotesProvider } from "./context/NotesContext";
+
 function App() {
-  const [notes, setNotes] = useState([]);
-
-  const handleAddNote = (newNote) => {
-    setNotes((prevNotes) => [...prevNotes, newNote]);
-  };
-
-  const handleDeleteNote = (id) => {
-    // const filteredNotes = notes.filter((n) => n.id !== id );
-    // setNotes(filteredNotes);
-
-    setNotes((prevNotes) => prevNotes.filter((n) => n.id !== id));
-  };
-
-
+  const [sortBy, setSortBy] = useState("latest");
   return (
-    <div className="container" >
-      <div className="note-header "> note header</div>
-      <div className="note-app">
-        < AddNewNote onAddNote={handleAddNote} />
-        <div className="note-container">
-          <NoteList notes={notes} onDelete={handleDeleteNote} />
+    <NotesProvider>
+      <div className="container">
+        <NoteHeader sortBy={sortBy} onSort={(e) => setSortBy(e.target.value)} />
+        <div className="note-app">
+          <AddNewNote />
+          <div className="note-container">
+            <NoteStatus />
+            <NoteList sortBy={sortBy} />
+          </div>
         </div>
       </div>
-    </div>
+    </NotesProvider>
   );
 }
 
